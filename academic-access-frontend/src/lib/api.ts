@@ -520,6 +520,30 @@ class ApiService {
     });
     return this.handleResponse<number>(response);
   }
+
+  // Transcript & Certificate
+  async getTranscriptMe(): Promise<any> {
+    const response = await fetch(`${API_BASE_URL}/api/transcript/me`, {
+      headers: this.getAuthHeaders(),
+    });
+    return this.handleResponse<any>(response);
+  }
+
+  async downloadTranscriptPdfMe(): Promise<Blob> {
+    const response = await fetch(`${API_BASE_URL}/api/transcript/me/pdf`, {
+      headers: this.getAuthHeaders(),
+    });
+    if (!response.ok) throw new Error('Failed to download transcript PDF');
+    return response.blob();
+  }
+
+  async downloadCertificatePdfMe(): Promise<Blob> {
+    const response = await fetch(`${API_BASE_URL}/api/certificate/me/pdf`, {
+      headers: this.getAuthHeaders(),
+    });
+    if (!response.ok) throw new Error('Failed to download certificate PDF');
+    return response.blob();
+  }
 }
 
 export const apiService = new ApiService();

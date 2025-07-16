@@ -66,5 +66,6 @@ public class Student {
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     @com.fasterxml.jackson.annotation.JsonManagedReference("student-enrollments")
+    @ToString.Exclude
     private List<Enrollment> enrollments;
 }

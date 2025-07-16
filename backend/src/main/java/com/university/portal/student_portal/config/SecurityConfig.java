@@ -14,10 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
-import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
-import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -35,6 +31,9 @@ public class SecurityConfig {
                 .requestMatchers("/api/student-fees/student/**").hasAnyRole("STUDENT", "ADMIN")
                 .requestMatchers("/api/payments/student/**").hasAnyRole("STUDENT", "ADMIN")
                 .requestMatchers("/api/students/me/**").hasRole("STUDENT")
+                .requestMatchers("/api/transcript/me").permitAll()
+                .requestMatchers("/api/transcript/me/pdf").permitAll()
+                .requestMatchers("/api/certificate/me/pdf").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
@@ -64,20 +63,6 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
-    }
-
-    @Bean
-    public JwtAuthenticationConverter jwtAuthenticationConverter() {
-        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
-        converter.setJwtGrantedAuthoritiesConverter(jwt -> {
-            String role = jwt.getClaimAsString("role");
-            if (role != null) {
-                return List.of(new SimpleGrantedAuthority("ROLE_" + role));
-            }
-            // For students, if no role is specified, default to STUDENT
-            return List.of(new SimpleGrantedAuthority("ROLE_STUDENT"));
-        });
-        return converter;
     }
 }
 
