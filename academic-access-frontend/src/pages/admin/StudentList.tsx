@@ -58,8 +58,9 @@ export const StudentList: React.FC = () => {
   const fetchStudents = async () => {
     try {
       const data = await apiService.getAllStudents();
-      setStudents(data);
+      setStudents(Array.isArray(data) ? data : []);
     } catch (error) {
+      setStudents([]); // fallback to empty array on error
       toast({
         title: 'Error',
         description: 'Failed to fetch students',

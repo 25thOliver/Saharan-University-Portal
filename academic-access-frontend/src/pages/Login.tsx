@@ -45,9 +45,9 @@ export const Login: React.FC = () => {
     try {
       let credentials;
       if (mode === 'admin') {
-        credentials = { email: email.trim(), password };
+        credentials = { username: email.trim(), password };
       } else {
-        credentials = { registrationNumber: registrationNumber.trim(), password };
+        credentials = { username: registrationNumber.trim(), password };
       }
       const response = await apiService.login(credentials);
       login(response.token, response.user);

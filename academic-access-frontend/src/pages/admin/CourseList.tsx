@@ -3,14 +3,14 @@ import { apiService } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Loader, Plus, Edit3, Trash2 } from 'lucide-react';
+import { Loader, Plus, Edit3, Trash2, Calendar, Settings } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
 interface Course {
   id: number;
-  code: string;
-  title: string;
+  courseCode: string;
+  courseTitle: string;
 }
 
 export const CourseList: React.FC = () => {
@@ -66,9 +66,17 @@ export const CourseList: React.FC = () => {
     <div className="space-y-6 max-w-4xl mx-auto">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-foreground">Courses</h1>
-        <Button onClick={() => navigate('/admin/courses/create')} variant="premium" className="gap-2">
-          <Plus className="h-4 w-4" /> Add Course
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={() => navigate('/admin/trimesters')} variant="outline" className="gap-2">
+            <Settings className="h-4 w-4" /> Manage Trimesters
+          </Button>
+          <Button onClick={() => navigate('/admin/trimester-courses')} variant="outline" className="gap-2">
+            <Calendar className="h-4 w-4" /> Manage Trimester Courses
+          </Button>
+          <Button onClick={() => navigate('/admin/courses/create')} variant="premium" className="gap-2">
+            <Plus className="h-4 w-4" /> Add Course
+          </Button>
+        </div>
       </div>
       <Card className="shadow-soft">
         <CardHeader>

@@ -2,6 +2,8 @@ package com.university.portal.student_portal.config;
 
 import com.university.portal.student_portal.repository.StudentRepository;
 import com.university.portal.student_portal.entity.Student;
+import com.university.portal.student_portal.auth.UserRepository;
+import com.university.portal.student_portal.auth.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -21,6 +24,7 @@ public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
     private final StudentRepository studentRepository;
+    private final UserRepository userRepository;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -34,6 +38,9 @@ public class SecurityConfig {
                 .requestMatchers("/api/transcript/me").permitAll()
                 .requestMatchers("/api/transcript/me/pdf").permitAll()
                 .requestMatchers("/api/certificate/me/pdf").permitAll()
+                .requestMatchers("/api/students/**").hasAnyRole("STUDENT", "ADMIN")
+                .requestMatchers("/api/programs/**").hasAnyRole("STUDENT", "ADMIN")
+                .requestMatchers("/api/courses/**").hasAnyRole("STUDENT", "ADMIN")
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
@@ -45,8 +52,14 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {
+            // Try admin by email
+            if (username.contains("@")) {
+                return userRepository.findByEmail(username)
+                    .orElseThrow(() -> new UsernameNotFoundException("Admin not found"));
+            }
+            // Otherwise, try student by registration number
             Student student = studentRepository.findByRegistrationNumber(username)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("Student not found"));
             return org.springframework.security.core.userdetails.User
                 .withUsername(student.getRegistrationNumber())
                 .password(student.getPassword())

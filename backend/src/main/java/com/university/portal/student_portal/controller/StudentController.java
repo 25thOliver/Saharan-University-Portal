@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import com.university.portal.student_portal.dto.StudentCourseEnrollmentDTO.StudentDTO;
 
 @RestController
 @RequestMapping("/api/students")
@@ -32,8 +33,11 @@ public class StudentController {
 
     // ✅ Get all students (ADMIN only - optional security later)
     @GetMapping
-    public ResponseEntity<List<Student>> getAllStudents() {
-        return ResponseEntity.ok(studentService.getAllStudents());
+    public ResponseEntity<List<StudentDTO>> getAllStudents() {
+        List<StudentDTO> dtos = studentService.getAllStudents().stream()
+            .map(StudentDTO::fromEntity)
+            .toList();
+        return ResponseEntity.ok(dtos);
     }
 
     // ✅ Get student by ID

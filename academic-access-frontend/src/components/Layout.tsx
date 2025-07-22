@@ -13,7 +13,9 @@ import {
   DollarSign,
   BookOpen,
   CreditCard,
-  FileText
+  FileText,
+  Clock,
+  Edit3
 } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -61,6 +63,18 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         roles: ['ADMIN']
       },
       {
+        name: 'Enrollments',
+        href: '/admin/enrollments',
+        icon: FileSpreadsheet,
+        roles: ['ADMIN']
+      },
+      {
+        name: 'Enrollment Requests',
+        href: '/admin/enrollment-requests',
+        icon: Clock,
+        roles: ['ADMIN']
+      },
+      {
         name: 'Bulk Operations',
         href: '/admin/bulk-operations',
         icon: FileSpreadsheet,
@@ -77,6 +91,12 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         name: 'My Courses',
         href: '/student/courses',
         icon: BookOpen,
+        roles: ['STUDENT']
+      },
+      {
+        name: 'Course Catalog',
+        href: '/student/course-catalog',
+        icon: GraduationCap,
         roles: ['STUDENT']
       },
       {

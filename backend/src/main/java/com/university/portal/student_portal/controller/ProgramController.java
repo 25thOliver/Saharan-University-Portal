@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
+import com.university.portal.student_portal.dto.TrimesterDTO.ProgramDTO;
 
 @RestController
 @RequestMapping("/api/programs")
@@ -16,8 +17,11 @@ public class ProgramController {
     private final ProgramService programService;
 
     @GetMapping
-    public ResponseEntity<List<Program>> getAllPrograms() {
-        return ResponseEntity.ok(programService.getAllPrograms());
+    public ResponseEntity<List<ProgramDTO>> getAllPrograms() {
+        List<ProgramDTO> dtos = programService.getAllPrograms().stream()
+            .map(ProgramDTO::fromEntity)
+            .toList();
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/{id}")

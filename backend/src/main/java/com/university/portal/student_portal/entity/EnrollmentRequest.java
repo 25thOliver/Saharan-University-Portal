@@ -1,6 +1,5 @@
 package com.university.portal.student_portal.entity;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,7 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Enrollment {
+public class EnrollmentRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,18 +18,33 @@ public class Enrollment {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "student_id")
-    @com.fasterxml.jackson.annotation.JsonBackReference("student-enrollments")
     private Student student;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "program_id")
-    @com.fasterxml.jackson.annotation.JsonBackReference("program-enrollments")
     private Program program;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "trimester_id")
     private Trimester trimester;
 
-    private LocalDateTime enrolledAt;
-}
+    @Column(nullable = false)
+    private String selectedCourseIds; // Comma-separated list of course IDs
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private RequestStatus status = RequestStatus.PENDING;
+
+    @Column(nullable = false)
+    private LocalDateTime requestedAt;
+
+    private LocalDateTime processedAt;
+
+    private String adminNotes;
+
+    public enum RequestStatus {
+        PENDING,
+        APPROVED,
+        REJECTED
+    }
+} 

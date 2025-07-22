@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
+import com.university.portal.student_portal.dto.TrimesterDTO.CourseDTO;
 
 @RestController
 @RequestMapping("/api/courses")
@@ -16,8 +17,11 @@ public class CourseController {
     private final CourseService courseService;
 
     @GetMapping
-    public ResponseEntity<List<Course>> getAllCourses() {
-        return ResponseEntity.ok(courseService.getAllCourses());
+    public ResponseEntity<List<CourseDTO>> getAllCourses() {
+        List<CourseDTO> dtos = courseService.getAllCourses().stream()
+            .map(CourseDTO::fromEntity)
+            .toList();
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/{id}")

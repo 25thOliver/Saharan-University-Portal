@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { apiService } from "@/lib/api";
+import { Link } from "react-router-dom";
 import { 
   BookOpen, 
   Calendar, 
@@ -9,7 +10,8 @@ import {
   FileText,
   GraduationCap,
   CheckCircle,
-  AlertTriangle
+  AlertTriangle,
+  Plus
 } from "lucide-react";
 
 interface Course {
@@ -83,7 +85,16 @@ export default function StudentCoursesPage() {
   return (
     <div className="p-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">My Courses</h1>
+        <div className="flex justify-between items-center mb-2">
+          <h1 className="text-2xl font-bold">My Courses</h1>
+          <Link
+            to="/student/course-catalog"
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md flex items-center gap-2 transition-colors"
+          >
+            <Plus className="h-4 w-4" />
+            Browse Course Catalog
+          </Link>
+        </div>
         <p className="text-gray-600">View your enrolled courses and academic progress</p>
       </div>
 
@@ -92,9 +103,13 @@ export default function StudentCoursesPage() {
           <BookOpen className="h-12 w-12 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">No Courses Enrolled</h3>
           <p className="text-gray-600 mb-4">You haven't enrolled in any courses yet.</p>
-          <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
+          <Link
+            to="/student/course-catalog"
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md inline-flex items-center gap-2"
+          >
+            <Plus className="h-4 w-4" />
             Browse Available Courses
-          </button>
+          </Link>
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

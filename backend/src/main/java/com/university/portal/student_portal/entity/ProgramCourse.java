@@ -1,36 +1,39 @@
 package com.university.portal.student_portal.entity;
 
-
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Enrollment {
+public class ProgramCourse {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "student_id")
-    @com.fasterxml.jackson.annotation.JsonBackReference("student-enrollments")
-    private Student student;
+    @JoinColumn(name = "program_id")
+    private Program program;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "program_id")
-    @com.fasterxml.jackson.annotation.JsonBackReference("program-enrollments")
-    private Program program;
+    @JoinColumn(name = "course_id")
+    private Course course;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "trimester_id")
     private Trimester trimester;
 
-    private LocalDateTime enrolledAt;
-}
+    @Column(nullable = false)
+    private int creditHours;
 
+    @Column(nullable = false)
+    private boolean isCore = true; // true for core courses, false for electives
+
+    @Column(nullable = false)
+    private boolean isActive = true;
+
+    private String prerequisites; // comma-separated course codes
+} 
