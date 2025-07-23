@@ -129,7 +129,7 @@ export const StudentDetail: React.FC = () => {
           </div>
           <div>
             <h1 className="text-3xl font-bold text-foreground">
-              {student.firstName} {student.lastName}
+              {student.fullName}
             </h1>
             <div className="flex items-center gap-2 mt-1">
               <span className="text-muted-foreground">{student.registrationNumber}</span>
@@ -156,23 +156,18 @@ export const StudentDetail: React.FC = () => {
           <CardContent className="space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <Label className="text-sm text-muted-foreground">First Name</Label>
-                <p className="font-medium">{student.firstName}</p>
+                <Label className="text-sm text-muted-foreground">Full Name</Label>
+                <p className="font-medium">{student.fullName}</p>
               </div>
               <div>
-                <Label className="text-sm text-muted-foreground">Last Name</Label>
-                <p className="font-medium">{student.lastName}</p>
+                <Label className="text-sm text-muted-foreground">Registration Number</Label>
+                <p className="font-medium font-mono">{student.registrationNumber}</p>
               </div>
-            </div>
-
-            <div>
-              <Label className="text-sm text-muted-foreground">Registration Number</Label>
-              <p className="font-medium font-mono">{student.registrationNumber}</p>
             </div>
 
             <div>
               <Label className="text-sm text-muted-foreground">Email Address</Label>
-              <p className="font-medium">{student.email}</p>
+              <p className="font-medium">{student.universityEmail}</p>
             </div>
 
             <div>
@@ -202,7 +197,7 @@ export const StudentDetail: React.FC = () => {
             <div>
               <Label className="text-sm text-muted-foreground">Address</Label>
               <p className="font-medium">
-                {student.address || (
+                {student.postalAddress || (
                   <span className="text-muted-foreground italic">Not provided</span>
                 )}
               </p>

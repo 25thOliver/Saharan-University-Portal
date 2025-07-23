@@ -34,21 +34,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const initAuth = async () => {
       const storedToken = localStorage.getItem('token');
-      const storedUser = localStorage.getItem('user');
-
-      if (storedToken && storedUser) {
-        try {
-          setToken(storedToken);
-          const parsedUser = JSON.parse(storedUser);
-          setUser(parsedUser);
-          // Only verify token for students
-          if (parsedUser.role !== 'ADMIN') {
-            await apiService.getCurrentUser();
-          }
-        } catch (error) {
-          console.error('Token validation failed:', error);
-          logout();
-        }
+      if (storedToken) {
+        setToken(storedToken);
+        await refreshUser();
       }
       setIsLoading(false);
     };
@@ -56,11 +44,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     initAuth();
   }, []);
 
-  const login = (newToken: string, newUser: User) => {
+  const login = async (newToken: string, newUser: User) => {
     localStorage.setItem('token', newToken);
     localStorage.setItem('user', JSON.stringify(newUser));
     setToken(newToken);
     setUser(newUser);
+    // Always refresh user info from backend after login
+    await refreshUser();
   };
 
   const logout = () => {

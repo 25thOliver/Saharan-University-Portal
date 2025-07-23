@@ -67,7 +67,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 if (student != null && jwtService.isTokenValid(jwt, student)) {
                     System.out.println("JWT Filter - Token valid, setting authentication");
                     var authToken = new UsernamePasswordAuthenticationToken(
-                            student,
+                            student.getRegistrationNumber(),
                             null,
                             List.of(new SimpleGrantedAuthority("ROLE_STUDENT"))
                     );

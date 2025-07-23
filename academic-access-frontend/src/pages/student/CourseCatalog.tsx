@@ -47,6 +47,8 @@ export default function CourseCatalogPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
   const [showEnrollmentModal, setShowEnrollmentModal] = useState(false);
+  const [programCourseCounts, setProgramCourseCounts] = useState<{ [programId: number]: number }>({});
+  const [activeTrimester, setActiveTrimester] = useState<any>(null);
 
   useEffect(() => {
     loadData();
@@ -55,9 +57,26 @@ export default function CourseCatalogPage() {
   const loadData = async () => {
     setLoading(true);
     try {
+      // Fetch active trimester(s)
+      const trimesters = await apiService.getActiveTrimesters();
+      const active = Array.isArray(trimesters) && trimesters.length > 0 ? trimesters[0] : null;
+      setActiveTrimester(active);
+
       // Load available programs
       const programsData = await apiService.getAllPrograms();
       setPrograms(Array.isArray(programsData) ? programsData : []);
+
+      // Fetch course counts for each program for the active trimester
+      if (active) {
+        const counts: { [programId: number]: number } = {};
+        await Promise.all((programsData || []).map(async (program: any) => {
+          const courses = await apiService.getCoursesByProgramAndTrimester(program.id, active.id);
+          counts[program.id] = courses.length;
+        }));
+        setProgramCourseCounts(counts);
+      } else {
+        setProgramCourseCounts({});
+      }
 
       // Load student's enrollment requests
       const requestsData = await apiService.getEnrollmentRequestsByStudent(user?.id || 0);
@@ -66,6 +85,7 @@ export default function CourseCatalogPage() {
       console.error('Error loading data:', error);
       setPrograms([]); // fallback to empty array on error
       setEnrollmentRequests([]);
+      setProgramCourseCounts({});
     } finally {
       setLoading(false);
     }
@@ -170,7 +190,7 @@ export default function CourseCatalogPage() {
 
               <div className="space-y-3">
                 <div className="text-sm text-gray-600">
-                  <p><strong>Courses:</strong> {program.courses?.length || 0}</p>
+                  <p><strong>Courses:</strong> {programCourseCounts[program.id] ?? 0}</p>
                 </div>
 
                 {/* Request Status */}

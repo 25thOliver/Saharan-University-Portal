@@ -64,6 +64,9 @@ public class Student {
     @Column(nullable = false)
     private String password;
 
+    @Column(name = "enrollment_date")
+    private LocalDate enrollmentDate;
+
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     @com.fasterxml.jackson.annotation.JsonManagedReference("student-enrollments")
     @ToString.Exclude

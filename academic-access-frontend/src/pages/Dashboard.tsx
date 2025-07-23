@@ -43,7 +43,7 @@ export const Dashboard: React.FC = () => {
           </div>
           <div>
             <h1 className="text-3xl font-bold">
-              Welcome back, {user.firstName}!
+              Welcome back, {user.fullName}!
             </h1>
             <p className="text-primary-foreground/80 mt-1">
               {isAdmin ? 'Admin Dashboard' : 'Student Dashboard'}
@@ -65,7 +65,7 @@ export const Dashboard: React.FC = () => {
           <CardContent className="space-y-3">
             <div>
               <p className="text-sm text-muted-foreground">Full Name</p>
-              <p className="font-medium">{user.firstName} {user.lastName}</p>
+              <p className="font-medium">{user.fullName}</p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Registration Number</p>
@@ -94,7 +94,7 @@ export const Dashboard: React.FC = () => {
           <CardContent className="space-y-3">
             <div>
               <p className="text-sm text-muted-foreground">Email Address</p>
-              <p className="font-medium">{user.email}</p>
+              <p className="font-medium">{user.universityEmail}</p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Phone Number</p>
@@ -107,7 +107,7 @@ export const Dashboard: React.FC = () => {
             <div>
               <p className="text-sm text-muted-foreground">Address</p>
               <p className="font-medium">
-                {user.address || (
+                {user.postalAddress || (
                   <span className="text-muted-foreground italic">Not provided</span>
                 )}
               </p>

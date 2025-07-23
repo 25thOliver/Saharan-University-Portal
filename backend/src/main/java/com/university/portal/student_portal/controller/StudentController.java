@@ -42,8 +42,11 @@ public class StudentController {
 
     // ✅ Get student by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Student>> getStudentById(@PathVariable Long id) {
-        return ResponseEntity.ok(studentService.getStudentById(id));
+    public ResponseEntity<?> getStudentById(@PathVariable Long id) {
+        return studentService.getStudentById(id)
+            .map(StudentProfileDTO::new)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
     }
 
     // ✅ Delete student
@@ -55,12 +58,13 @@ public class StudentController {
 
     // ✅ Authenticated student profile (based on JWT)
     @GetMapping("/me")
-    public ResponseEntity<Student> getCurrentStudent(Authentication authentication) {
+    public ResponseEntity<?> getCurrentStudent(Authentication authentication) {
+        System.out.println("DEBUG: authentication.getName() = " + authentication.getName());
         String registrationNumber = authentication.getName(); // subject from JWT
 
         Optional<Student> student = studentService.getStudentByRegistrationNumber(registrationNumber);
         return student
-                .map(ResponseEntity::ok)
+                .map(s -> ResponseEntity.ok(new StudentProfileDTO(s)))
                 .orElse(ResponseEntity.notFound().build());
     }
 
@@ -76,5 +80,33 @@ public class StudentController {
     public ResponseEntity<?> resetPassword(@PathVariable String registrationNumber, @RequestBody PasswordResetRequest request) {
         studentService.resetPassword(registrationNumber, request);
         return ResponseEntity.ok().build();
+    }
+
+    // DTO for safe serialization
+    public static class StudentProfileDTO {
+        public Long id;
+        public String registrationNumber;
+        public String fullName;
+        public String universityEmail;
+        public String personalEmail;
+        public String phoneNumber;
+        public String gender;
+        public String dateOfBirth;
+        public String postalAddress;
+        public String enrollmentDate;
+        // Add more fields as needed
+
+        public StudentProfileDTO(Student s) {
+            this.id = s.getId();
+            this.registrationNumber = s.getRegistrationNumber();
+            this.fullName = s.getFullName();
+            this.universityEmail = s.getUniversityEmail();
+            this.personalEmail = s.getPersonalEmail();
+            this.phoneNumber = s.getPhoneNumber();
+            this.gender = s.getGender();
+            this.dateOfBirth = s.getDateOfBirth() != null ? s.getDateOfBirth().toString() : null;
+            this.postalAddress = s.getPostalAddress();
+            this.enrollmentDate = s.getEnrollmentDate() != null ? s.getEnrollmentDate().toString() : null;
+        }
     }
 }

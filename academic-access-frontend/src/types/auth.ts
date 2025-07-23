@@ -1,14 +1,17 @@
 export interface User {
   id: number;
   registrationNumber: string;
-  firstName: string;
-  lastName: string;
-  email: string;
+  fullName: string;
+  universityEmail: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
   role: 'STUDENT' | 'ADMIN';
   dateOfBirth?: string;
   phoneNumber?: string;
   address?: string;
   enrollmentDate?: string;
+  postalAddress?: string;
 }
 
 export interface LoginRequest {
